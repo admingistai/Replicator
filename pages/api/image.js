@@ -11,6 +11,16 @@ const RATE_LIMIT = parseInt(process.env.IMAGE_RATE_LIMIT || '5'); // Very low li
 const RATE_WINDOW = 60 * 1000; // 1 minute
 
 export default async function handler(req, res) {
+  // Set CORS headers to allow cross-origin requests
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   try {
     // Only allow POST requests
     if (req.method !== 'POST') {

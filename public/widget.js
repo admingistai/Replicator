@@ -1,6 +1,6 @@
 (function() {
-    'use strict';
-    
+  'use strict';
+
     // ================================
     // CONFIGURATION - Add your API key here
     // ================================
@@ -11,11 +11,41 @@
     // 3. Replace 'YOUR_OPENAI_API_KEY_HERE' below with your actual API key
     // 4. Make sure your OpenAI account has billing set up
           // ================================
-      const WIDGET_CONFIG = {
-          // API endpoints - these will call your secure serverless functions
-          CHAT_API_URL: '/api/chat',
-          IMAGE_API_URL: '/api/image',
-          MODEL: 'gpt-3.5-turbo', // You can change this to gpt-4, gpt-4-turbo, etc.
+    // Dynamically determine the backend URL from the widget script source
+    function getBackendBaseUrl() {
+        // Try to find the widget script tag to determine the backend URL
+        const scripts = document.querySelectorAll('script[src*="widget.js"]');
+        for (const script of scripts) {
+            const src = script.src;
+            if (src) {
+                // Extract the base URL from the widget script source
+                const url = new URL(src);
+                return `${url.protocol}//${url.host}`;
+            }
+        }
+        
+        // Fallback: try to detect from current script (if available)
+        if (typeof document !== 'undefined' && document.currentScript) {
+            const src = document.currentScript.src;
+            if (src) {
+                const url = new URL(src);
+                return `${url.protocol}//${url.host}`;
+            }
+        }
+        
+        // Last resort fallback - this should rarely be used
+        console.warn('[GistWidget] Could not auto-detect backend URL, using fallback');
+        return 'https://replicator-topaz.vercel.app';
+    }
+
+    const BACKEND_BASE_URL = getBackendBaseUrl();
+    console.log('[GistWidget] Using backend URL:', BACKEND_BASE_URL);
+
+    const WIDGET_CONFIG = {
+        // API endpoints - these will call your secure serverless functions
+        CHAT_API_URL: `${BACKEND_BASE_URL}/api/chat`,
+        IMAGE_API_URL: `${BACKEND_BASE_URL}/api/image`,
+        MODEL: 'gpt-3.5-turbo', // You can change this to gpt-4, gpt-4-turbo, etc.
         TIMEOUT_MS: 20000, // 20 second timeout as per PRD
         DEBOUNCE_MS: 300   // 300ms debounce as per PRD
     };
@@ -516,7 +546,7 @@
             }
             
             .gist-widget {
-                position: fixed;
+        position: fixed;
                 bottom: 24px;
                 left: 50%;
                 transform: translateX(-50%);
@@ -590,7 +620,7 @@
                 justify-content: center;
                 cursor: pointer;
                 transition: all 0.2s ease;
-                color: white;
+        color: white;
             }
             
             .gist-pill-submit:hover {
@@ -641,7 +671,7 @@
             .gist-toolbox-tab {
                 padding: 8px 16px;
                 border-radius: calc(${styling.borderRadius} - 4px);
-                font-size: 14px;
+        font-size: 14px;
                 font-weight: 500;
                 cursor: pointer;
                 transition: all 0.2s ease;
@@ -821,9 +851,9 @@
                                 left 2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                                 right 2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
                                 width 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-                    display: flex;
+        display: flex;
                     flex-direction: column;
-                    align-items: center;
+        align-items: center;
                     gap: 6px;
                     filter: drop-shadow(0 0 0 rgba(0, 0, 0, 0));
                 }
@@ -937,7 +967,7 @@
                 
                 .gist-widget:not(.minimized) .gist-pill-content {
                     width: 380px;
-                    justify-content: space-between;
+        justify-content: space-between;
                     padding-left: 4px;
                     transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
                 }
@@ -1130,10 +1160,10 @@
                 @keyframes fadeInUp {
                     to {
                         opacity: 1;
-                        transform: translateY(0);
-                    }
-                }
-                
+          transform: translateY(0);
+        }
+      }
+
                 .gist-answer-text.animate-in {
                     animation: fadeInUp 0.6s ease-out forwards;
                 }
@@ -1494,9 +1524,9 @@
                 .gist-pill-content {
                     position: relative;
                     z-index: 1;
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
                     color: #374151;
                     font-size: 14px;
                     font-weight: 400;
@@ -1507,8 +1537,8 @@
                 }
                 
                 .gist-pill-logo {
-                    width: 20px;
-                    height: 20px;
+        width: 20px;
+        height: 20px;
                     border-radius: 4px;
                     object-fit: contain;
                     flex-shrink: 0;
@@ -1535,10 +1565,10 @@
                     width: 18px;
                     height: 18px;
                     background: #000000;
-                    border-radius: 50%;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
                     color: white;
                     font-size: 10px;
                     font-weight: 600;
@@ -1562,8 +1592,8 @@
                     height: 18px;
                     background: #6b7280;
                     border-radius: 4px;
-                    display: flex;
-                    align-items: center;
+        display: flex;
+        align-items: center;
                     justify-content: center;
                     color: white;
                     font-size: 10px;
@@ -1896,7 +1926,7 @@
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    font-size: 12px;
+        font-size: 12px;
                     font-weight: 600;
                     color: white;
                     flex-shrink: 0;
@@ -1934,7 +1964,7 @@
                     border-radius: 4px;
                     font-size: 10px;
                     font-weight: 500;
-                    border: none;
+        border: none;
                     cursor: pointer;
                     transition: background 0.2s ease;
                     flex-shrink: 0;
@@ -1948,12 +1978,12 @@
                     width: 100%;
                     padding: 12px 24px;
                     background: linear-gradient(135deg, var(--widget-primary-color, #6366f1) 0%, var(--widget-secondary-color, #8b5cf6) 100%);
-                    color: white;
+        color: white;
                     border: none;
                     border-radius: 8px;
                     font-size: 14px;
                     font-weight: 600;
-                    cursor: pointer;
+        cursor: pointer;
                     transition: all 0.2s ease;
                     margin-top: 20px;
                     font-family: inherit;
@@ -2056,7 +2086,7 @@
                 
                 /* Share Interface Styles */
                 .gist-share-interface {
-                    padding: 0;
+        padding: 0;
                     opacity: 0;
                     transform: translateY(10px);
                     transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
@@ -2156,9 +2186,9 @@
                     margin-right: 12px;
                     width: 20px;
                     height: 20px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
                     flex-shrink: 0;
                 }
                 
@@ -2176,9 +2206,9 @@
                 
                 .gist-share-feedback {
                     margin-top: 16px;
-                    padding: 8px 12px;
+        padding: 8px 12px;
                     border-radius: 6px;
-                    font-size: 12px;
+        font-size: 12px;
                     text-align: center;
                     font-weight: 500;
                     transition: all 0.3s ease;
@@ -2199,13 +2229,13 @@
                 /* Suggested Questions Styles */
                 .gist-suggested-questions {
                     padding: 0;
-                    opacity: 0;
+        opacity: 0;
                     transform: translateY(10px);
                     transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
-                }
-                
+      }
+
                 .gist-suggested-questions.gist-content-entered {
-                    opacity: 1;
+        opacity: 1;
                     transform: translateY(0);
                 }
                 
@@ -2989,9 +3019,9 @@
             // Check if tool is enabled
             if (!TOOLS_CONFIG[tool]) {
                 console.warn(`[GistWidget] Tool '${tool}' is disabled and cannot be switched to`);
-                return;
-            }
-            
+      return;
+    }
+
             currentTool = tool;
             window.gistCurrentTool = currentTool; // Keep window reference in sync
             
@@ -3093,7 +3123,7 @@
             answerContent.innerHTML = `
                 <div class="gist-answer-placeholder gist-content-entering">
                     ${placeholderText}
-                </div>
+        </div>
             `;
             
             // Trigger animation
@@ -3159,7 +3189,7 @@
                         <div class="gist-questions-loading-progress">
                             <div class="gist-questions-loading-progress-bar">
                                 <div class="gist-questions-loading-progress-fill"></div>
-                            </div>
+      </div>
                         </div>
                     </div>
                 </div>
@@ -3928,7 +3958,7 @@ Instructions:
             hasAnswer = true;
             
             // Trigger animations after a brief delay to ensure DOM is updated
-            setTimeout(() => {
+    setTimeout(() => {
                 const elements = answerContent.querySelectorAll('.gist-content-entering');
                 elements.forEach(el => {
                     el.classList.remove('gist-content-entering');
@@ -5642,7 +5672,7 @@ Instructions:
                 if (!input.value.trim()) {
                     userIsInteracting = false;
                 }
-            }, 100);
+    }, 100);
         });
         
         // Handle input hover for auto-desktop mode on desktop devices
@@ -5915,9 +5945,9 @@ Instructions:
 
     // Initialize widget when DOM is ready
     function initWidget() {
-        if (document.readyState === 'loading') {
+  if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', createWidget);
-        } else {
+  } else {
             createWidget();
         }
     }
@@ -5944,4 +5974,4 @@ Instructions:
     console.groupEnd();
     
     initWidget();
-})(); 
+})();
