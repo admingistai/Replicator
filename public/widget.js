@@ -3811,12 +3811,20 @@ Instructions:
                 
                 const data = await response.json();
                 
-                if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+                // Handle both OpenAI direct format and our backend format
+                let responseText;
+                if (data.response) {
+                    // Our backend format
+                    responseText = data.response;
+                } else if (data.choices && data.choices[0] && data.choices[0].message) {
+                    // Direct OpenAI format
+                    responseText = data.choices[0].message.content;
+                } else {
                     throw new Error('Invalid response format from API');
                 }
                 
                 return {
-                    response: data.choices[0].message.content,
+                    response: responseText,
                     usage: data.usage
                 };
                 
@@ -4562,13 +4570,19 @@ Instructions:
                 
                 const data = await response.json();
                 
-                if (!data.data || !data.data[0] || !data.data[0].url) {
+                // Handle our backend format
+                if (data.imageUrl) {
+                    return {
+                        imageUrl: data.imageUrl
+                    };
+                } else if (data.data && data.data[0] && data.data[0].url) {
+                    // Handle direct OpenAI format (fallback)
+                    return {
+                        imageUrl: data.data[0].url
+                    };
+                } else {
                     throw new Error('Invalid response format from image API');
                 }
-                
-                return {
-                    imageUrl: data.data[0].url
-                };
                 
             } catch (error) {
                 clearTimeout(timeoutId);
@@ -4938,11 +4952,17 @@ Instructions:
                 
                 const data = await response.json();
                 
-                if (!data.choices || !data.choices[0] || !data.choices[0].message) {
+                // Handle both OpenAI direct format and our backend format
+                let assistantMessage;
+                if (data.response) {
+                    // Our backend format
+                    assistantMessage = data.response;
+                } else if (data.choices && data.choices[0] && data.choices[0].message) {
+                    // Direct OpenAI format
+                    assistantMessage = data.choices[0].message.content;
+                } else {
                     throw new Error('Invalid response format from API');
                 }
-                
-                const assistantMessage = data.choices[0].message.content;
                 
                 // Add assistant response to conversation history
                 conversationHistory.push({ role: 'assistant', content: assistantMessage });

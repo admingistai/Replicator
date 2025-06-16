@@ -1,10 +1,9 @@
-import { Configuration, OpenAIApi } from 'openai';
+import OpenAI from 'openai';
 
 // Configure OpenAI
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 // Rate limiting (simple in-memory for serverless)
 const requestCounts = new Map();
@@ -72,7 +71,7 @@ export default async function handler(req, res) {
     }
 
     // Make OpenAI API call
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.completions.create({
       model: model,
       messages: messages,
       temperature: temperature,
@@ -81,7 +80,7 @@ export default async function handler(req, res) {
     });
 
     // Extract response
-    const response = completion.data.choices[0]?.message?.content;
+    const response = completion.choices[0]?.message?.content;
     
     if (!response) {
       return res.status(500).json({ error: 'No response generated' });
@@ -92,7 +91,7 @@ export default async function handler(req, res) {
       success: true,
       response: response,
       model: model,
-      usage: completion.data.usage
+      usage: completion.usage
     });
 
   } catch (error) {

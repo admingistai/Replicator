@@ -1,10 +1,9 @@
-import { Configuration, OpenAIApi } from 'openai';
+import OpenAI from 'openai';
 
 // Configure OpenAI
-const configuration = new Configuration({
+const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
-const openai = new OpenAIApi(configuration);
 
 // Rate limiting (simple in-memory for serverless)
 const requestCounts = new Map();
@@ -75,7 +74,7 @@ export default async function handler(req, res) {
     console.log(`[Image API] Generating image with prompt: "${cleanPrompt}"`);
 
     // Make OpenAI DALL-E API call
-    const imageResponse = await openai.createImage({
+    const imageResponse = await openai.images.generate({
       model: 'dall-e-3', // Use DALL-E 3 for better quality
       prompt: cleanPrompt,
       size: size,
@@ -86,7 +85,7 @@ export default async function handler(req, res) {
     });
 
     // Extract image URL
-    const imageUrl = imageResponse.data.data[0]?.url;
+    const imageUrl = imageResponse.data[0]?.url;
     
     if (!imageUrl) {
       return res.status(500).json({ error: 'No image generated' });
