@@ -1,21 +1,19 @@
 {
   "version": 2,
   "functions": {
-    "api/proxy.js": {
+    "pages/api/proxy.js": {
       "memory": 3008,
       "maxDuration": 30
+    },
+    "pages/api/chat.js": {
+      "memory": 1024,
+      "maxDuration": 30
+    },
+    "pages/api/image.js": {
+      "memory": 1024,
+      "maxDuration": 60
     }
   },
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
-  ],
   "env": {
     "NODE_ENV": "production",
     "MAX_REQUEST_SIZE": "52428800",
