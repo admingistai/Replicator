@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "functions": {
+    "api/proxy.js": {
+      "memory": 3008,
+      "maxDuration": 30
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "MAX_REQUEST_SIZE": "52428800",
+    "RATE_LIMIT_REQUESTS": "100",
+    "CHAT_RATE_LIMIT": "20",
+    "IMAGE_RATE_LIMIT": "5"
+  }
+}
